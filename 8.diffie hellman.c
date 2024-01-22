@@ -1,51 +1,33 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-
-// Function to calculate modular exponentiation
-int modExp(int base, int exponent, int modulus) {
-    int result = 1;
-    base = base % modulus;
-
-    while (exponent > 0) {
-        if (exponent % 2 == 1)
-            result = (result * base) % modulus;
-
-        exponent = exponent >> 1;
-        base = (base * base) % modulus;
-    }
-
-    return result;
+#include<stdio.h>
+#include<conio.h>
+long long int power(int a, int b, int mod)
+{
+long long int t;
+if(b==1)
+return a;
+t=power(a,b/2,mod);
+if(b%2==0)
+return (t*t)%mod;
+else
+return (((t*t)%mod)*a)%mod;
 }
-
-// Diffie-Hellman key exchange function
-int diffieHellman(int a, int q, int x) {
-    return modExp(a, x, q);
+long int calculateKey(int a, int x, int n)
+{
+return power(a,x,n);
 }
+void main()
+{
+int n,g,x,a,y,b;
 
-int main() {
-    // Public parameters (can be chosen publicly)
-    int a = 5;   // Generator
-    int q = 21;  // Prime modulus
-
-    // Alice's secret key
-    int aliceSecret = 6;
-    // Bob's secret key
-    int bobSecret = 8;
-    // Calculate public values
-    int alicePublic = diffieHellman(a, q, aliceSecret);
-    int bobPublic = diffieHellman(a, q, bobSecret);
-    // Exchange public values
-    // In a real scenario, these values would be exchanged securely
-    int sharedSecretAlice = diffieHellman(bobPublic, q, aliceSecret);
-    int sharedSecretBob = diffieHellman(alicePublic, q, bobSecret);
-    // Display shared secrets
-    printf("Shared Secret (Alice): %d\n", sharedSecretAlice);
-    printf("Shared Secret (Bob): %d\n", sharedSecretBob);
-
-    return 0;
+printf("Enter the value of n and g : ");
+scanf("%d%d",&n,&g);
+printf("Enter the value of x for the first person : ");
+scanf("%d",&x);
+a=power(g,x,n);
+printf("Enter the value of y for the second person : ");
+scanf("%d",&y);
+b=power(g,y,n);
+printf("key for the first person is :%lld\n",power(b,x,n));
+printf("key for the second person is :%lld\n",power(a,y,n));
+getch();
 }
-
-OUTPUT:
-Shared Secret (Alice): 1
-Shared Secret (Bob): 1
